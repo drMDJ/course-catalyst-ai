@@ -1,6 +1,3 @@
-// Filename: tailwind.config.js
-// Place this file in your main project folder (course-catalyst-ai)
-
 export default {
   content: [
     "./index.html",
@@ -10,14 +7,4 @@ export default {
     extend: {},
   },
   plugins: [],
-}
-```javascript
-// Filename: postcss.config.js
-// Place this file in your main project folder (course-catalyst-ai)
-
-export default {
-  plugins: {
-    tailwindcss: {},
-    autoprefixer: {},
-  },
 }
