@@ -197,7 +197,8 @@ export default function App() {
 
         for (let i = 0; i < maxRetries; i++) {
             try {
-                const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent?key=${apiKey}`, {
+                // FIX: Updated the model to a more stable, generally available version.
+                const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=${apiKey}`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(payload)
@@ -371,7 +372,6 @@ export default function App() {
                                                 </ul>
                                                 <button 
                                                     onClick={() => {
-                                                        // FIX: Added defensive check for quiz data before revealing answer
                                                         if (lecture.quiz && Array.isArray(lecture.quiz.answers) && lecture.quiz.answers.length > lecture.quiz.correctAnswerIndex) {
                                                             onRevealAnswer({
                                                                 correctAnswer: lecture.quiz.answers[lecture.quiz.correctAnswerIndex],
@@ -547,7 +547,6 @@ export default function App() {
                                     onRevealAnswer={openQuizModal}
                                     onGenerate={handleGenerateSingleSection}
                                     sectionIndex={index}
-                                    // FIX: Pass the necessary audio props down to the component
                                     handlePlayAudio={handlePlayAudio}
                                     audioLoading={audioLoading}
                                     audioPlaying={audioPlaying}
