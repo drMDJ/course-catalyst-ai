@@ -197,17 +197,30 @@ export default function App() {
 
         for (let i = 0; i < maxRetries; i++) {
             try {
-                // FIX: Updated the model to a more stable, generally available version.
-                const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=${apiKey}`, {
+                // FIX: Updated the model to a different stable version to troubleshoot potential permission issues.
+                const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${apiKey}`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(payload)
                 });
 
                 if (!response.ok) {
-                    if (response.status === 403) throw new Error(`API request failed with a 403 Forbidden error. This often means the API key is misconfigured. Please check your key's restrictions in the Google Cloud Console.`);
-                    if (response.status >= 500) throw new Error(`API request failed with server status ${response.status}`);
-                    const errorText = await response.text();
+                    // FIX: Enhanced error handling to provide more specific feedback from the API response body.
+                    let errorBody = {};
+                    try {
+                        errorBody = await response.json();
+                    } catch (e) {
+                        // Ignore if response is not JSON
+                    }
+
+                    if (response.status === 403) {
+                        const message = errorBody?.error?.message || "This often means the API key is misconfigured.";
+                        throw new Error(`API request failed with a 403 Forbidden error. ${message} Please check your key's restrictions in the Google Cloud Console.`);
+                    }
+                    if (response.status >= 500) {
+                        throw new Error(`API request failed with server status ${response.status}`);
+                    }
+                    const errorText = errorBody?.error?.message || await response.text();
                     throw new Error(`API request failed with status ${response.status}: ${errorText}`);
                 }
 
